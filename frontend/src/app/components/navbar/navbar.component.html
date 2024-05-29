@@ -1,0 +1,41 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-primary">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="/">Restaurant</a>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0" *ngIf="is_authenticated()">
+        <ng-container *ngIf="get_role() === 'Cashier' || get_role() === 'Waiter'">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/tables">Tables</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/menu">Menu</a>
+          </li>
+          <ng-container *ngIf="get_role() === 'Cashier'">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/staff">Staff</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/statistics">Statistics</a>
+            </li>
+          </ng-container>
+        </ng-container>
+        <li class="nav-item" *ngIf="get_role() !== 'Waiter' && get_role() !== ''">
+          <a class="nav-link" routerLink="/orders">Orders</a>
+        </li>
+      </ul>
+      <div class="d-flex" *ngIf="is_authenticated()">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/profile">Settings</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/" (click)="logout()">Logout</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>

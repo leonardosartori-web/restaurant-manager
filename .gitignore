@@ -1,0 +1,26 @@
+/node_modules
+# Project exclude paths
+/backend/models/ModelInterface.js
+/backend/models/ModelInterface.js.map
+/backend/models/Order.js
+/backend/models/Order.js.map
+/backend/models/Product.js
+/backend/models/Product.js.map
+/backend/models/Statistic.js
+/backend/models/Statistic.js.map
+/backend/models/Table.js
+/backend/models/Table.js.map
+/backend/models/User.js
+/backend/models/User.js.map
+/backend/routes/login.js
+/backend/routes/login.js.map
+/backend/routes/orders.js
+/backend/routes/orders.js.map
+/backend/routes/products.js
+/backend/routes/products.js.map
+/backend/routes/statistics.js
+/backend/routes/statistics.js.map
+/backend/routes/tables.js
+/backend/routes/tables.js.map
+/backend/routes/users.js
+/backend/routes/users.js.map

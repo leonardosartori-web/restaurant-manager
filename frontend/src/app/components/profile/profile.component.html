@@ -1,0 +1,18 @@
+<form>
+  <div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item"><b>Username:</b> {{user.username}}</li>
+      <li class="list-group-item"><b>Email:</b> {{user.email}}</li>
+      <li class="list-group-item"><b>Role:</b> {{user.role}}</li>
+    </ul>
+  </div>
+  <hr>
+  <div>
+    <label for="password" class="form-label">New password:</label>
+    <input type="password" class="form-control" #password="ngModel" [(ngModel)]="new_password" name="password" id="password">
+  </div>
+  <div *ngIf="errmessage" class="text-danger" role="alert">
+    Updating error: {{errmessage}}
+  </div>
+  <button class="btn btn-outline-info" (click)="update_password()">Update</button>
+</form>

@@ -1,0 +1,10 @@
+<div>
+  <app-navbar></app-navbar>
+  <div class="container p-4">
+  <div *ngIf="message" class="alert alert-{{alert_type}} custom-alert alert-dismissible animate__animated animate__fadeIn" role="alert">
+    {{message}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  <router-outlet></router-outlet>
+  </div>
+</div>

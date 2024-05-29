@@ -1,0 +1,53 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col" *ngFor="let header of table_header">{{header.toString().toUpperCase()}}</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of users">
+      <td *ngFor="let header of table_header">{{user[header]}}</td>
+      <td><button class="btn btn-danger" (click)="delete_user(user)">Delete</button></td>
+    </tr>
+  </tbody>
+</table>
+<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUser">Add user</button>
+
+
+<div class="modal fade" id="addUser" tabindex="-1" aria-labelledby="addUser" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">Add user</h1>
+        <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="row">
+            <div class="col-6">
+              <label for="name">Name:</label>
+              <input type="text" #name="ngModel" [(ngModel)]="add_user_data.name" name="name" id="name" class="form-control">
+            </div>
+            <div class="col-6">
+              <label for="surname">Surname:</label>
+              <input type="text" #surname="ngModel" [(ngModel)]="add_user_data.surname" name="surname" id="surname" class="form-control">
+            </div>
+          </div>
+          <label for="email">Email:</label>
+          <input type="email" #email="ngModel" [(ngModel)]="add_user_data.email" name="email" id="email" class="form-control">
+          <label for="password">Password:</label>
+          <input type="password" #password="ngModel" [(ngModel)]="add_user_data.password" name="password" id="password" class="form-control">
+          <label for="role">Role:</label>
+          <select [(ngModel)]="add_user_data.role" name="role" id="role" class="form-control" placeholder="Select">
+            <option *ngFor="let p of ['Cashier', 'Waiter', 'Cook', 'Bartender']" [ngValue]="p">{{p}}</option>
+          </select>
+          <div *ngIf="errmessage" class="text-danger" role="alert">
+            Adding error: {{errmessage}}
+          </div>
+          <button class="btn btn-outline-success" (click)="add_user()">Add</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

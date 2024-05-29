@@ -1,0 +1,74 @@
+<div class="row">
+  <h2>Today profit: € {{today_profit}}</h2>
+</div>
+
+<div class="row">
+<h2>Services per user</h2>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th *ngFor="let head of table_headers" scope="col">
+        {{head.toString().toUpperCase()}}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let s of statistics_users" data-bs-toggle="modal" data-bs-target="#userModal" (click)="set_current_user(s['user_email'])">
+    <td *ngFor="let col of table_headers">{{s[col]}}</td>
+  </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="row">
+<h2>Profits per day</h2>
+<div class="chart-container">
+  <canvas id="profits">{{ charts['profits'] }}</canvas>
+</div>
+</div>
+
+<div class="row">
+<h2>Tables statistics</h2>
+<div class="row">
+  <div class="col-6">
+    <div class="chart-container">
+      <canvas id="tables">{{ charts['tables'] }}</canvas>
+    </div>
+  </div>
+  <div class="col-6">
+    <h4>Total capacity: {{statistics_tables.capacityCustomers}}</h4>
+    <h4>Current customers turnout: {{statistics_tables.currentCustomers * 100 / statistics_tables.capacityCustomers  | number : '1.0-2'}}%</h4>
+  </div>
+</div>
+</div>
+
+<div class="row">
+  <h2>Turnout expected: {{expected_turnout()}} customers</h2>
+</div>
+
+<div class="row">
+  <h2>Turnout per hour</h2>
+  <div class="chart-container">
+    <canvas id="hours">{{ charts['hours'] }}</canvas>
+  </div>
+</div>
+
+
+<div class="modal fade" tabindex="-1" id="userModal" aria-labelledby="userModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">User</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><b>Username:</b> {{current_user.username}}</li>
+          <li class="list-group-item"><b>Email:</b> {{current_user.email}}</li>
+          <li class="list-group-item"><b>Role:</b> {{current_user.role}}</li>
+        </ul>
+      </div>
+      <div class="modal-footer"></div>
+    </div>
+  </div>
+</div>

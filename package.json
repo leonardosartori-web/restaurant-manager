@@ -1,0 +1,15 @@
+{
+  "name": "restaurant-manager",
+  "version": "1.0.0",
+  "scripts": {
+    "client": "cd frontend && npm start",
+    "server": "cd backend && npm start",
+    "start": "concurrently \" npm run client \"  \" npm run server \" ",
+    "init": "npm install && npm run install-client && npm run install-server ",
+    "install-client": "cd frontend && npm install",
+    "install-server": "cd backend && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}

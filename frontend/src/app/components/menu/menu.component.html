@@ -1,0 +1,88 @@
+<div class="table-responsive">
+  <h2>Foods:</h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col" *ngFor="let header of table_headers">{{header.toString().toUpperCase()}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let food of foods" data-bs-toggle="modal" data-bs-target="#productModal" (click)="set_current_product(food)">
+        <td *ngFor="let header of table_headers">{{food[header]}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <hr>
+  <h2>Drinks:</h2>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th scope="col" *ngFor="let header of table_headers">{{header.toString().toUpperCase()}}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let drink of drinks" data-bs-toggle="modal" data-bs-target="#productModal" (click)="set_current_product(drink)">
+      <td *ngFor="let header of table_headers">{{drink[header]}}</td>
+    </tr>
+    </tbody>
+  </table>
+  <input type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal" value="Add product"/>
+</div>
+
+<!-- Add product modal -->
+<div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">Add product</h1>
+        <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <label for="name" class="form-label">Name:</label>
+          <input type="text" #name="ngModel" [(ngModel)]="add_product_data.name" name="name" id="name" class="form-control">
+          <label for="kind" class="form-label">Kind:</label>
+          <select [(ngModel)]="add_product_data.kind" name="kind" id="kind" class="form-control">
+            <option value="Food">Food</option>
+            <option value="Drink">Drink</option>
+          </select>
+          <label for="price" class="form-label">Price:</label>
+          <input type="number" #price="ngModel" [(ngModel)]="add_product_data.price" name="price" id="price" class="form-control">
+          <div *ngIf="errmessage" class="text-danger" role="alert">
+            Adding error: {{errmessage}}
+          </div>
+          <button class="btn btn-outline-success" (click)="add_product()">Add</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">{{current_product.name}}</h1>
+        <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <label for="updatePrice" class="form-label">Price:</label>
+          <input type="number" #price="ngModel" [(ngModel)]="update_product_data.price" name="price" id="updatePrice" class="form-control">
+          <div *ngIf="errmessage" class="text-danger" role="alert">
+            Updating error: {{errmessage}}
+          </div>
+          <button class="btn btn-outline-info" (click)="update_product()">Update</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="delete_product()">Delete</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

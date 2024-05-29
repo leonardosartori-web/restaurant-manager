@@ -1,0 +1,136 @@
+<div *ngIf="user_role() == 'Waiter'">
+  <label for="capacity" class="form-label">Filter capacity:</label>
+  <input type="number" #seats_capacity="ngModel" [(ngModel)]="filter_capacity" name="capacity" id="capacity" class="form-control" (ngModelChange)="get_filtered_tables()">
+</div>
+
+<div class="p-2" *ngIf="user_role() == 'Cashier'">
+  <input type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTableModal" value="Add table"/>
+</div>
+
+<div class="row">
+  <div class="col-3 p-3" [ngClass]="{'opacity-25': table.isOccupied}" *ngFor="let table of filtered_tables" data-bs-toggle="modal" data-bs-target="#tableOptions" (click)="set_current_table(table)">
+    <div class="card">
+      <img class="card-img-top" src="{{imagePath}}" alt="Card image cap">
+      <div class="card-body">
+        <h5 class="card-title">{{table.num}}</h5>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Occupy the table -->
+
+<div class="modal fade" id="tableOptions" tabindex="-1" aria-labelledby="tableOptions" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Table {{current_table.num}}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="!current_table.isOccupied">
+          Seats capacity: {{get_curr_table().seats}}
+        </div>
+        <div *ngIf="!current_table.isOccupied && user_role() == 'Cashier'">
+          <label for="seats" class="form-label">Number of seats:</label>
+          <input type="number" #updateseats="ngModel" [(ngModel)]="update_table_seats" min="1" name="seats" id="seats" class="form-control">
+          <div *ngIf="errmessage" class="text-danger" role="alert">
+            Updating error: {{errmessage}}
+          </div>
+          <button class="btn btn-outline-info" (click)="update_seats()">Update</button>
+        </div>
+        <div *ngIf="current_table.isOccupied && (user_role() == 'Cashier' || current_order.waiter == get_user_id())">
+          <div id="receipt">
+          <h5>Order: {{current_order._id}}</h5>
+          <div *ngIf="user_role() == 'Cashier'" data-html2canvas-ignore="true">
+            Waiter: {{current_order.waiter}}
+          </div>
+          <div *ngIf="current_order.products.length > 0">
+            <h6>Products:</h6>
+            <table class="table table-borderless table-striped" id="tableTable">
+              <tbody>
+              <tr *ngFor="let product of current_order.products">
+                <td>{{product.name}}</td>
+                <td data-html2canvas-ignore="true">{{product.status}}</td>
+                <td>€ {{product.price}}</td>
+                <ng-container *ngIf="user_role() === 'Waiter'">
+                  <td data-html2canvas-ignore="true"><button type="button" *ngIf="product.status == 'awaiting'" class="btn-close btn-danger" (click)="delete_product_from_order(product.product_id)"></button></td>
+                  <td data-html2canvas-ignore="true"><button type="button" *ngIf="product.status == 'ready'" class="btn btn-warning" (click)="serve_product(product.product_id)">Serve</button></td>
+                </ng-container>
+              </tr>
+              </tbody>
+              <tfoot>
+                <tr class="fw-bold">
+                  <td>Total:</td>
+                  <td data-html2canvas-ignore="true"></td>
+                  <td>€ {{compute_bill()}}</td>
+                  <td data-html2canvas-ignore="true"></td>
+                  <td data-html2canvas-ignore="true"></td>
+                </tr>
+              </tfoot>
+            </table>
+            <hr>
+          </div>
+          </div>
+          <form class="d-flex" *ngIf="user_role() === 'Waiter'">
+            <form class="form">
+              <label for="product" class="form-label">Product:</label>
+              <div class="row">
+                <div class="col">
+                  <select [(ngModel)]="current_order_selected_product" class="form-select form-group" name="product" id="product" placeholder="Select">
+                    <option *ngFor="let p of menu" [ngValue]="p">{{p.name}}</option>
+                  </select>
+                </div>
+                <div class="col-2">
+                  <button class="btn btn-outline-success" (click)="add_product_to_order()">Add</button>
+                </div>
+              </div>
+            </form>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <ng-container *ngIf="user_role() === 'Waiter'">
+          <button type="button" *ngIf="!current_table.isOccupied" class="btn btn-success" data-bs-dismiss="modal" (click)="occupy()">Occupy</button>
+          <button type="button" *ngIf="current_table.isOccupied && current_order.products != undefined && current_order.products.length <= 0" class="btn btn-warning" data-bs-dismiss="modal" (click)="remove_empty_order()">Free</button>
+        </ng-container>
+        <ng-container *ngIf="user_role() === 'Cashier'">
+          <button *ngIf="can_pay()" type="button" class="btn btn-info" data-bs-dismiss="modal" (click)="generate(current_order._id)">Print</button>
+          <button *ngIf="can_pay()" type="button" class="btn btn-success" data-bs-dismiss="modal" (click)="free_table()">Pay</button>
+          <button *ngIf="!current_table.isOccupied" type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="delete_table()">Delete</button>
+        </ng-container>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Add new table -->
+
+<div class="modal fade" id="addTableModal" tabindex="-1" aria-labelledby="addTableModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Add a new table</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <label for="seats" class="form-label">Number of seats:</label>
+          <input type="number" #seats="ngModel" [(ngModel)]="add_table_data.seats" min="1" name="seats" id="seats" class="form-control">
+          <label for="num" class="form-label">Table number:</label>
+          <input type="number" #num="ngModel" [(ngModel)]="add_table_data.num" name="num" id="num" class="form-control">
+          <div *ngIf="errmessage" class="text-danger" role="alert">
+            Adding error: {{errmessage}}
+          </div>
+          <button class="btn btn-outline-success" (click)="add_new_table()">Add</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
