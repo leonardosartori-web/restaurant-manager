@@ -16,7 +16,7 @@ interface ReceivedToken {
 export class UserService {
 
   private token: string = "";
-  public url = "https://restaurant-manage-api.netlify.app";
+  public url = "http://localhost:8080";
   public roles: string[] = ["Cashier", "Cook", "Bartender", "Waiter"];
   public dashboard_routes: any = {"Cashier": "/tables", "Waiter": "/tables", "Cook": "/orders", "Bartender": "/orders"};
 
